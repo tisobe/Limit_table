@@ -1,0 +1,33 @@
+This directory contains a set of python scripts which estimates yellow and red limits of all msids from the past data.
+The limits are derived from  average and standard deviations of the last 6 monhts data. 
+The scripts also give the trend plots of these limits from the beginning of the Chandra mission. 
+
+Data are taken from:
+    /data/mta4/Deriv/*fits
+which give one hour average of histrical data.
+
+
+Scripts:
+--------
+
+limit_table.py: driving script
+
+createLimitTable.py:    extract data from the histrical fits data, and create ascii limit table for each msid
+
+extractLimits.py:       create a current limit table
+
+plotMsidLimits.py:      plot trend plots.
+
+createHtmlPage.py:      crate html pages for viewing tremd plots
+
+
+Current Directory Structure (see house_keeping/dir_list)
+--------------------------------------------------------
+
+'/data/mta2/isobe/Git/Limit_table/house_keeping/'          :house_keeping
+'/data/mta2/isobe/Git/Limit_table/'                        :bin_dir
+'/data/mta2/isobe/Git/Limit_table/Plots/'                  :plot_dir
+'/data/mta2/isobe/Git/Limit_table/Data/'                   :data_dir
+'/data/mta/Script/Python_script/'                          :mta_dir
+'./'                                                       :html_dir
+
