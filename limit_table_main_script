@@ -1,0 +1,5 @@
+setascds
+
+setenv PYTHONPATH "/usr/local/lib/python2.6/site-packages:$PYTHONPATH"
+
+/data/mta/MTA/bin/runLimitTableGen.py
