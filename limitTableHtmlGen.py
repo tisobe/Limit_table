@@ -1,10 +1,28 @@
 #!/usr/local/bin/python2.6
 
+#################################################################################################################
+#                                                                                                               #
+#   createHtmlPage.py: create html pages to display trend plots under each group                                #
+#                                                                                                               #
+#           author: t. isobe (tisobe@cfa.harvard.edu)                                                           #
+#                                                                                                               #
+#           last update: Aug 15, 2012                                                                           #
+#                                                                                                               #
+#################################################################################################################
+
 import sys
 import os
 import string
 import re
 import copy
+import random
+
+#
+#--- define a temp file name
+#
+
+ztemp = '/tmp/ztemp' + str(random.randint(0,10000))
+
 
 #
 #--- reading directory list
@@ -48,13 +66,14 @@ def createGroupHtmlPage():
 #
 #--- read group names
 #
-    cmd = 'ls -d ' + plot_dir + '* > /tmp/ztemp'
+    cmd = 'ls -d ' + plot_dir + '* >' + ztemp
     os.system(cmd)
 
-    f     = open('/tmp/ztemp', 'r')
+    f     = open(ztemp, 'r')
     dlist = [line.strip() for line in f.readlines()]
     f.close()
-    os.system('rm /tmp/ztemp')
+    cmd = 'rm ' + ztemp
+    os.system(cmd)
 
 #
 #--- create/update the top html page
@@ -90,15 +109,18 @@ def createGroupHtmlPage():
             fo2.write(line)
             line = '<h2> Group: ' + gname  + '</h2>\n\n'
             fo2.write(line)
+
+            line = '<h3 style="padding-top:15px;padding-bottom:15px">Data Table: <a href="' + data_dir + gname + '">' + gname + '</a></h3>\n\n'
 #
 #--- find out plot names
 #
-            cmd  = 'ls ' + group + '/* > /tmp/ztemp'
+            cmd  = 'ls ' + group + '/* >' + ztemp 
             os.system(cmd)
-            f     = open('/tmp/ztemp', 'r')
+            f     = open(ztemp, 'r')
             plist = [line.strip() for line in f.readlines()]
             f.close()
-            os.system('rm /tmp/ztemp')
+            cmd = 'rm ' + ztemp
+            os.system(cmd)
     
 #
 #--- create a table with plots:  two column format

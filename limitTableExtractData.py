@@ -1,5 +1,15 @@
 #!/usr/local/bin/python2.6
 
+#################################################################################################################
+#                                                                                                               #
+#   createLimitTable.py: create a table of averages over 6 month intevals from a fits file                      #
+#                                                                                                               #
+#       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
+#                                                                                                               #
+#       last update: Aug 14, 2012                                                                               #
+#                                                                                                               #
+#################################################################################################################
+
 import sys
 import os
 import string
@@ -42,6 +52,7 @@ import mta_common_functions as mcf
 ###############################################################################################################
 
 def createLimitTable(file):
+
     """
     this function read a fits file and create table of averages over 6 month intervals of each column
     and print them out.
@@ -59,7 +70,7 @@ def createLimitTable(file):
 #
     fdata    = pyfits.open(file)
     fbdata   =  fdata[1].data
-    colNames = fdata[1].columns.names               #---- column names
+    colNames = fdata[1].columns.names            #---- column names
     colLen   = len(colNames)                     #---- column length
 
 #
@@ -100,7 +111,6 @@ def createLimitTable(file):
 
             if timeSum <= 15778800:                     #---- 6 month in seconds, if less than that, keep accumurating
                 for k in range(0, colLen):
-#                        print str(k) + '< --->' + str(tbdata[k])
                         dataSum[k]  += tbdata[k]
                         dataSum2[k] += tbdata[k] * tbdata[k]
     
@@ -141,6 +151,7 @@ def createLimitTable(file):
 ###############################################################################################################
 
 def makeOutFileName(file):
+
     """
     isolate msid category from fits file name.
     example: /mta/.../aciseleca.fits to aciseleca

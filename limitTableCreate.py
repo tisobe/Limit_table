@@ -1,5 +1,15 @@
 #!/usr/local/bin/python2.6
 
+#################################################################################################################
+#                                                                                                               #
+#      LimitTableCreate.py: a control script to create limt trend data sets and their plots                     #
+#                                                                                                               #
+#           author: t. siboe (tisobe@cfa.harvard.edu)                                                           #
+#                                                                                                               #
+#           last update: Aug 14, 2012                                                                           #
+#                                                                                                               #
+#################################################################################################################
+
 import sys
 import os
 import os.path
@@ -39,10 +49,17 @@ import extractLimits     as ctbl
 import createHtmlPage    as chtm
 
 ###############################################################################################################
-###############################################################################################################
+### readFileName: a control script to create limit trend data sets and plots                               ####
 ###############################################################################################################
 
 def readFileName():
+
+    """
+    a control script to create limit trend data sets and plots
+
+    input: none, but will read house_keeping/data_list and eventually /data/mta4/Deriv/<msid group>.fits
+    output: trend data (data_dir/<msid group name>), plot (plt_dir/<sid group name>/<msid>.png, and related html pages
+    """
     
 #
 #--- read the names of fits files
@@ -50,14 +67,13 @@ def readFileName():
 
 #    os.system("ls -d /data/mta4/Deriv/*fits > /tmp/mta/zlist")
 #    f     = open("/tmp/mta/zlist", "r")
-    os.system("ls -d /data/mta4/Deriv/*fits > /tmp/zlist")
-    f     = open("/tmp/zlist", "r")
-
-    dlist = [line.strip() for line in f.readlines()]
-    f.close()
+#    dlist = [line.strip() for line in f.readlines()]
+#    f.close()
 #    os.system("rm /tmp/mta/zlist")
-    os.system("rm /tmp/zlist")
 
+    indir = house_keeping + 'data_list'
+    f     = open(indir, 'r')
+    dlist = [line.strip() for line in f.readlines()]
 #
 #--- work on each fits files
 #
@@ -96,6 +112,7 @@ def readFileName():
 #---------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
+
     readFileName()
 
 
