@@ -2,11 +2,11 @@
 
 #################################################################################################################
 #                                                                                                               #
-#      LimitTableCreate.py: a control script to create limt trend data sets and their plots                     #
+#      limitTableCreate.py: a control script to create limt trend data sets and their plots                     #
 #                                                                                                               #
 #           author: t. siboe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Aug 14, 2012                                                                           #
+#           last update: Aug 15, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -42,11 +42,11 @@ sys.path.append(bin_dir)
 #
 #--- converTimeFormat contains MTA time conversion routines
 #
-import convertTimeFormat as tcnv
-import createLimitTable  as clt
-import plotMsidLimits    as pml
-import extractLimits     as ctbl
-import createHtmlPage    as chtm
+import convertTimeFormat     as tcnv
+import limitTableExtractData as clt
+import limitTablePlotGen     as pml
+import limitTableMsidTable   as ctbl
+import limitTableHtmlGen     as chtm
 
 ###############################################################################################################
 ### readFileName: a control script to create limit trend data sets and plots                               ####
