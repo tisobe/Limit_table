@@ -6,7 +6,7 @@
 #                                                                                                               #
 #           author: t. siboe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Aug 15, 2012                                                                           #
+#           last update: Sep 06, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -21,7 +21,7 @@ import fnmatch
 #--- reading directory list
 #
 
-path = './house_keeping/dir_list'
+path = '/data/mta/Script/Limit_table/house_keeping/dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()

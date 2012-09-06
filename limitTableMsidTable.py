@@ -28,7 +28,7 @@ ztemp = '/tmp/ztemp' + str(random.randint(0,10000))
 #--- reading directory list
 #
 
-path = '/data/mta2/isobe/Git/Limit_table/house_keeping/dir_list'
+path = '/data/mta/Script/Limit_table/house_keeping/dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()

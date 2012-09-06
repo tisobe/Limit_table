@@ -28,7 +28,7 @@ ztemp = '/tmp/ztemp' + str(random.randint(0,10000))
 #--- reading directory list
 #
 
-path = './house_keeping/dir_list'
+path = '/data/mta/Script/Limit_table/house_keeping/dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()
@@ -153,7 +153,7 @@ def createGroupHtmlPage():
 #--- create indivisual html pages
 #
 #            out_name1 =  group + '.html'
-            out_name1 =  './Plots/' + gname + '.html'
+            out_name1 =  plot_dir + gname + '.html'
     
             line = '<td sytle="text-aligne:center"><a href="' + out_name1 + '">' + gname + '</a></td>\n'       #--- add line to the top html page
             fo.write(line)
@@ -228,6 +228,7 @@ def createGroupHtmlPage():
             fo.write(line)
 
         line = '</tr>\n</table></div>\n<br /><br />\n<hr />\n'
+        fo.write(line)
 
 #
 #--- Today's date 
