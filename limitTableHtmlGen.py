@@ -153,7 +153,7 @@ def createGroupHtmlPage():
 #--- create indivisual html pages
 #
 #            out_name1 =  group + '.html'
-            out_name1 =  plot_dir + gname + '.html'
+            out_name1 =  './Plots/' + gname + '.html'
     
             line = '<td sytle="text-aligne:center"><a href="' + out_name1 + '">' + gname + '</a></td>\n'       #--- add line to the top html page
             fo.write(line)
@@ -169,7 +169,8 @@ def createGroupHtmlPage():
 #
 #--- creating a html page for each group
 #
-            fo2 = open(out_name1, 'w')
+            out_name2 = html_dir + out_name1
+            fo2 = open(out_name2, 'w')
     
             line = '<!DOCTYPE html>\n<html>\n<head>\n<title>' + gname + '</title>\n</head>\n<body>\n\n'
             fo2.write(line)
