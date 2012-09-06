@@ -3,3 +3,7 @@ setascds
 setenv PYTHONPATH "/usr/local/lib/python2.6/site-packages:$PYTHONPATH"
 
 /data/mta/MTA/bin/runLimitTableGen.py
+
+chgrp mtagroup /data/mta/www/mta_limit_table/Plots/*/*
+chgrp mtagroup /data/mta/www/mta_limit_table/Data/*
+chgrp mtagroup /data/mta/www/mta_limit_table/*.html

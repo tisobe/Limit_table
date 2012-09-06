@@ -6,7 +6,7 @@
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Aug 15, 2012                                                                               #
+#       last update: Sep 06, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -65,7 +65,7 @@ def extractLimit():
 #
 #--- read data set names from data directory
 #
-    cmd = 'ls ' + data_dir + '* >' ztemp
+    cmd = 'ls ' + data_dir + '* >' +  ztemp
     os.system(cmd)
 
     f    = open(ztemp, 'r')
@@ -78,6 +78,9 @@ def extractLimit():
 #
     outfile = data_dir + 'os_limit_table'
     fw   = open(outfile, 'w')
+    dtime = tcnv.currentTime('Display')
+    line  = '#Last Update: ' + dtime + '\n'
+    fw.write(line)
     fw.write('#\t\t\tLower Limit\t\tUpper Limit\t\tGroup\n')
     fw.write('#msid\t\t Red\tYellow\tYellow\tRed\n')
     fw.write('#-------------------------------------------------------\n')

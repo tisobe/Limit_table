@@ -150,6 +150,7 @@ def plotPanel(col, time, davg, dsig, out_path):
     output:  a plot in png format: out_pth/<col>.png
 
     """
+
 #
 #--- clean up the data
 #
@@ -171,7 +172,7 @@ def plotPanel(col, time, davg, dsig, out_path):
 #--- for the case there is no data
 #
     length = len(ctime)
-    if length < 1:
+    if length < 5:
         name = out_path + '/' + col + '.png'
         cmd  = 'cp ' +  house_keeping + 'no_data.png ' + name
         os.system(cmd)

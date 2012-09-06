@@ -6,7 +6,7 @@
 #                                                                                                               #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Aug 15, 2012                                                                           #
+#           last update: Sep 06, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -81,15 +81,69 @@ def createGroupHtmlPage():
     out_name1 = html_dir +  'limit_trend.html'
     fo = open(out_name1, 'w')
 
-    line = '<!DOCTYPE html>\n<html>\n<head>\n<title>Limit Trend Page</title>\n</head>\n<body>\n\n'
+    line = '<!DOCTYPE html>\n<html>\n'
     fo.write(line)
-    line = '<h2 style="padding-bottom:20px">Limit Trend Plot</h2>\n\n'
+    line = '<head>\n<title>MTA Limit Trend Page</title>\n'
+    fo.write(line)
+    line = '<link rel="stylesheet" type="text/css" href="/mta/REPORTS/Template/mta_monthly.css" />'
+#    line = '<link rel="stylesheet" type="text/css" href="/data/mta4/www/REPORTS/Template/mta_monthly.css" />'
+    fo.write(line)
+    line = '</head>\n<body>\n\n'
+    fo.write(line)
+    line = '<h2 style="padding-bottom:20px">MTA Limit</h2>\n\n'
+    fo.write(line)
+
+    line = '<p style="padding-bottom:15px">Although there are Chandra operation range limit for each MSID, MTA group uses its own \n'
+    fo.write(line)
+    line = 'limit table for monitoring and trending purposes. \n'
+    fo.write(line)
+    line = '<p style="padding-bottom:15px">The limits for each MSID are created as following:</p>\n'
     fo.write(line)
     line = '<ul>\n'
     fo.write(line)
+    line = '<li>The average and the standard deviation of each MSID are computed for 6 month periods for the entire period.</li>\n'
+    fo.write(line)
+    line = '<li>These averages and standard deviations are farther smoothed by taking past 2 year moving averages.</li>\n'
+    fo.write(line)
+    line = '<li><em style="color:yellow">Yellow Limits</em> are set at the center value (the average) plus or minus 4 standard deviation aways.</li>\n'
+    fo.write(line)
+    line = '<li><em style="color:red">Red Limits</em> are set t the center value (the average) plus or minus 5 standard deviation aways.</li>\n'
+    fo.write(line)
+    line = '<li>Most recent 6 month values of each MSID are taken as MTA Limit.</li>\n'
+    line = '</ul><br /><br />'
+    fo.write(line)
+
+    line = '<p style="padding-bottom:25px">You can find the most recent MTA limit table at <a href="./Data/os_limit_table" target="blank">MTA Limit Table</a></p>.\n'
+    fo.write(line)
+
+
+
+
+
+
+
 #
 #--- check each group
 #
+    line = '<h2 style="padding-bottom:20px">MTA Limit Trend</h2>\n\n'
+    fo.write(line)
+
+    line = '<p style="padding-bottom:40px">The following table lists trend plots of msids for each group. To see the plots, '
+    fo.write(line)
+    line = 'please click the group name. It will open the trend plot page of the group.  '
+    fo.write(line)
+    line = 'In each plot, the blue line indicates the (moving) average of the value of the msid, the yellow lines indicate lower and '
+    fo.write(line)
+    line = 'upper yellow limits, and red lines indicate lower and upper red limits.</p>\n\n'
+    fo.write(line)
+
+
+    line ='<div><table border=2 cellpadding=8 cellspacing=8 style="text-align:center;margin-left:auto;margin-right:auto">\n'
+    fo.write(line)
+    line = '<tr>'
+    fo.write(line)
+
+    ecnt = 0
     for group in dlist:
         m1 = re.search('.html', group)                  #---- ignore the name ends with "html"
         if m1 is None:
@@ -98,11 +152,23 @@ def createGroupHtmlPage():
 #
 #--- create indivisual html pages
 #
-            out_name1 =  group + '.html'
+#            out_name1 =  group + '.html'
+            out_name1 =  './Plots/' + gname + '.html'
     
-            line = '<li><a href="' + out_name1 + '">' + gname + '</a></li>\n'       #--- add line to the top html page
+            line = '<td sytle="text-aligne:center"><a href="' + out_name1 + '">' + gname + '</a></td>\n'       #--- add line to the top html page
             fo.write(line)
-    
+#
+#--- 4 entries per raw
+#
+            if ecnt > 2:
+                ecnt = 0
+                line = '</tr>\n'
+                fo.write(line)
+            else:
+                ecnt += 1
+#
+#--- creating a html page for each group
+#
             fo2 = open(out_name1, 'w')
     
             line = '<!DOCTYPE html>\n<html>\n<head>\n<title>' + gname + '</title>\n</head>\n<body>\n\n'
@@ -153,8 +219,15 @@ def createGroupHtmlPage():
      
             fo2.close()
 
-    line = '</ul>\n<br /><br />\n<hr />\n'
-    fo.write(line)
+    if ecnt == 0:
+        line = '</table></div>\n<br /><br />\n<hr />\n'
+        fo.write(line)
+    else:
+        for k in range(ecnt, 4):
+            line = '<td>&#160</td>'
+            fo.write(line)
+
+        line = '</tr>\n</table></div>\n<br /><br />\n<hr />\n'
 
 #
 #--- Today's date 
@@ -162,6 +235,8 @@ def createGroupHtmlPage():
     dtime = tcnv.currentTime('Display')
 
     line = 'Last Update: ' + dtime
+    fo.write(line)
+    line = '<br /><br />If you have any questions about this page, please contact <a href="mailto:isobe@head.cfa.harvard.edu">isobe@head.cfa.harvard.edu</a>.'
     fo.write(line)
 
     line = '</body>\n</html>\n'
