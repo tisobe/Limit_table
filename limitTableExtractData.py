@@ -6,7 +6,7 @@
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Sep 07, 2012                                                                               #
+#       last update: Sep 10, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -58,10 +58,11 @@ def createLimitTable(file):
     """
     m1    = re.search('/data/mta4/Deriv/grad', file)
     if m1 is not None:
-        createTable2(file)
+        outName = createTable2(file)
     else:
-        createTable(file)
+        outName = createTable(file)
 
+    return outName
 
 ###############################################################################################################
 ### createTable: create a table of averages over 6 month intevals from a fits file                    ####
