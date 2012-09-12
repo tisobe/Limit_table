@@ -83,7 +83,6 @@ def readFileName():
 #--- extract limit values for msids in each group and print them out
 #
         outName = clt.createLimitTable(file)
-
 #
 #--- check whether there is a directory for the group for creating plots
 #

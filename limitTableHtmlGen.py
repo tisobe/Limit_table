@@ -6,7 +6,7 @@
 #                                                                                                               #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Sep 06, 2012                                                                           #
+#           last update: Sep 12, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -93,7 +93,9 @@ def createGroupHtmlPage():
     line = '<h2 style="padding-bottom:20px">MTA Limit</h2>\n\n'
     fo.write(line)
 
-    line = '<p style="padding-bottom:15px">Although there are Chandra operation range limit for each MSID, MTA group uses its own \n'
+    line = '<p style="padding-bottom:15px">The following pages give the ranges values for each subsystem '
+    fo.write(line)
+    line = 'and MSID as they have evolved over the course of the mission.'
     fo.write(line)
     line = 'limit table for monitoring and trending purposes. \n'
     fo.write(line)
@@ -101,13 +103,15 @@ def createGroupHtmlPage():
     fo.write(line)
     line = '<ul>\n'
     fo.write(line)
-    line = '<li>The average and the standard deviation of each MSID are computed for 6 month periods for the entire period.</li>\n'
+    line = '<li>The average and the standard deviation of each MSID are computed for 3 month periods for the entire period.</li>\n'
     fo.write(line)
-    line = '<li>These averages and standard deviations are farther smoothed by taking past 2 year moving averages.</li>\n'
+    line = '<li>These averages and standard deviations are further smoothed by taking past 2 year moving averages. \n'
     fo.write(line)
-    line = '<li><em style="color:yellow">Yellow Limits</em> are set at the center value (the average) plus or minus 4 standard deviation aways.</li>\n'
+    line = '(For example, the value given for January 2002 is the average of the 3 month averages from January 2001 to January 2003.)</li>\n'
     fo.write(line)
-    line = '<li><em style="color:red">Red Limits</em> are set t the center value (the average) plus or minus 5 standard deviation aways.</li>\n'
+    line = '<li><em style="color:yellow">Yellow lines</em> are set at the center value (the average) plus or minus 4 standard deviation aways.</li>\n'
+    fo.write(line)
+    line = '<li><em style="color:red">Red lines</em> are set t the center value (the average) plus or minus 5 standard deviation aways.</li>\n'
     fo.write(line)
     line = '<li>Most recent 6 month values of each MSID are taken as MTA Limit.</li>\n'
     line = '</ul><br /><br />'

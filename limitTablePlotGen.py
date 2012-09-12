@@ -6,7 +6,7 @@
 #                                                                                                                   #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                                   #
-#           last update: Sep 06, 2012                                                                               #
+#           last update: Sep 12, 2012                                                                               #
 #                                                                                                                   #
 #####################################################################################################################
 
@@ -92,7 +92,8 @@ def msidLimitPlot(file, out_path):
 #--- header is in the form of <msid> std <msid> ste ...  so need skip std part
 #
     for ent in colEnt:
-        if ent != 'std' and ent != '#time':
+        m = re.search('_dev', ent)
+        if ent != 'std' and ent != '#time' and (m is None):
             colName.append(ent)
 #
 #-- read and save the data
@@ -109,18 +110,21 @@ def msidLimitPlot(file, out_path):
         else:
             atemp    = re.split('\s+|\t+', line)
 
-            yearDate = convertToYearDate(float(atemp[0]))
-            time.append(yearDate)
+            try:
+                yearDate = convertToYearDate(float(atemp[0]))
+                time.append(yearDate)
 
-            for k in range(1, colLen):
-                k2 = int(k/2)
-                if k % 2 == 0:
-                    k2 -= 1
-                    exec("sig%d.append(float(atemp[%d]))" % (k2, k))
-                else:
-                    exec("avg%d.append(float(atemp[%d]))" % (k2, k))
+                for k in range(1, colLen):
+                    k2 = int(k/2)
+                    if k % 2 == 0:
+                        k2 -= 1
+                        exec("sig%d.append(float(atemp[%d]))" % (k2, k))
+                    else:
+                        exec("avg%d.append(float(atemp[%d]))" % (k2, k))
 
-            total += 1
+                total += 1
+            except:
+                pass
 
 #
 #--- create a trend plot for each msid
@@ -187,8 +191,15 @@ def plotPanel(col, time, davg, dsig, out_path):
 #
     temp   = ctime
     temp.sort(key=float)
-    xmin   = temp[0]
-    xmax   = temp[length-1]
+#    xmin   = temp[0]
+#    xmax   = temp[length-1]
+    xmin   = 2000.0
+    [tyear, tmon, tday, thours, tmin, tsec, tweekday, tyday, tdst] = tcnv.currentTime()
+    if tyday < 183:
+        xmax   = float(tyear)
+    else:
+        xmax   = tyear + 0.5
+
     xdiff  = xmax - xmin
     xmin  -= 0.1 * xdiff
     xmax  += 0.1 * xdiff

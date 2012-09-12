@@ -2,11 +2,11 @@
 
 #################################################################################################################
 #                                                                                                               #
-#   createLimitTable.py: create a table of averages over 6 month intevals from a fits file                      #
+#   createLimitTable.py: create a table of averages over 3 month intevals from a fits file                      #
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Sep 10, 2012                                                                               #
+#       last update: Sep 12, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -23,7 +23,7 @@ import math
 #--- reading directory list
 #
 
-path = './dir_list'
+path = '/data/mta/Script/Limit_table/house_keeping/dir_list'
 f    = open(path, 'r')
 data = [line.strip() for line in f.readlines()]
 f.close()
@@ -49,7 +49,7 @@ import mta_common_functions as mcf
 
 
 ###############################################################################################################
-### createLimitTable: create a table of averages over 6 month intevals from a fits file                    ####
+### createLimitTable: create a table of averages over 3 month intevals from a fits file                    ####
 ###############################################################################################################
 
 def createLimitTable(file):
@@ -65,13 +65,13 @@ def createLimitTable(file):
     return outName
 
 ###############################################################################################################
-### createTable: create a table of averages over 6 month intevals from a fits file                    ####
+### createTable: create a table of averages over 3 month intevals from a fits file                    ####
 ###############################################################################################################
 
 def createTable(file):
 
     """
-    this function read a fits file and create table of averages over 6 month intervals of each column
+    this function read a fits file and create table of averages over 3 month intervals of each column
     and print them out.
     input:  file (fits file)
     output: ascii table of averages and standard deviations
@@ -128,7 +128,8 @@ def createTable(file):
             if tbdata[tpos] > 63071999.0:
                 line = '%6d\t' % (tbdata[tpos])         
 
-                if timeSum <= 15778800:                     #---- 6 month in seconds, if less than that, keep accumurating
+#                if timeSum <= 15778800:                     #---- 6 month in seconds, if less than that, keep accumurating
+                if timeSum <= 7889400:                     #---- 3 month in seconds, if less than that, keep accumurating
                     for k in range(0, colLen):
                             dataSum[k]  += tbdata[k]
                             dataSum2[k] += tbdata[k] * tbdata[k]
@@ -137,7 +138,7 @@ def createTable(file):
                     tot += 1.0
                 else:
 #
-#--- if the data are accumurated for 6 months, compute averate and standard deviation, and print them out
+#--- if the data are accumurated for 3 months, compute averate and standard deviation, and print them out
 #
                     line = '%6d\t' % (tbdata[tpos])
                     f.write(line)
@@ -166,13 +167,13 @@ def createTable(file):
     return outName
 
 ###############################################################################################################
-### createTable2: create a table of averages over 6 month intevals from a fits file for grad data     ####
+### createTable2: create a table of averages over 3 month intevals from a fits file for grad data     ####
 ###############################################################################################################
 
 def createTable2(file):
 
     """
-    this function read a fits file and create table of averages over 6 month intervals of each column
+    this function read a fits file and create table of averages over 3 month intervals of each column
     and print them out. Since gradablk.fits uses DOM for date, we need to handle differently.
     input:  file (fits file)
     output: ascii table of averages and standard deviations
@@ -233,7 +234,8 @@ def createTable2(file):
                 stime = tbdata[tpos] * 86400                #---- a day in second
                 line = '%6d\t' % (stime)         
 
-                if timeSum <= 183:                     #---- 6 month in day, if less than that, keep accumurating
+#                if timeSum <= 183:                     #---- 6 month in day, if less than that, keep accumurating
+                if timeSum <=  92:                     #---- 3 month in day, if less than that, keep accumurating
                     for k in range(0, colLen):
                             if tbdata[k] != -99.0:
                                 dataSum[k]  += tbdata[k]
@@ -243,7 +245,7 @@ def createTable2(file):
                         tot += 1.0
                 else:
 #
-#--- if the data are accumurated for 6 months, compute averate and standard deviation, and print them out
+#--- if the data are accumurated for 3 months, compute averate and standard deviation, and print them out
 #
                     stime = tbdata[tpos] * 86400 
                     line = '%6d\t' % (stime)
