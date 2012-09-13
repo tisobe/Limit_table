@@ -2,11 +2,11 @@
 
 #################################################################################################################
 #                                                                                                               #
-#   createLimitTable.py: create a table of averages over 3 month intevals from a fits file                      #
+#   createLimitTable.py: create a table of averages over a given intevals from a fits file                      #
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Sep 12, 2012                                                                               #
+#       last update: Sep 13, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -49,38 +49,47 @@ import mta_common_functions as mcf
 
 
 ###############################################################################################################
-### createLimitTable: create a table of averages over 3 month intevals from a fits file                    ####
+### createLimitTable: create a table of averages over tspan intevals from a fits file                      ####
 ###############################################################################################################
 
-def createLimitTable(file):
+def createLimitTable(file, tspan, outloc):
 
     """
+    this function is a control script which call a function creates table of averages over tspan intervals of each column
+    and print them out.
+    input:  file (fits file)
+            tspan: time period which the average is taken. it must be in unit of seconds 
+            (3 months: 7889400, 6 month: 15778800)
+            outloc: output directory
+    output: ascii table of averages and standard deviations
     """
     m1    = re.search('/data/mta4/Deriv/grad', file)
     if m1 is not None:
-        outName = createTable2(file)
+        outName = createTable2(file, tspan, outloc)
     else:
-        outName = createTable(file)
+        outName = createTable(file, tspan, outloc)
 
     return outName
 
 ###############################################################################################################
-### createTable: create a table of averages over 3 month intevals from a fits file                    ####
+### createTable: create a table of averages over tspan intevals from a fits file                           ####
 ###############################################################################################################
 
-def createTable(file):
+def createTable(file, tspan, outloc):
 
     """
-    this function read a fits file and create table of averages over 3 month intervals of each column
+    this function read a fits file and create table of averages over tspan intervals of each column
     and print them out.
     input:  file (fits file)
+            tspan: time period which the average is taken. it must be in unit of seconds 
+            outloc: output directory
     output: ascii table of averages and standard deviations
     """
 #
 #--- create an output file and open for writing
 #
     outName = makeOutFileName(file)
-    outPath = data_dir + outName
+    outPath = data_dir + outloc + '/' +  outName
     f = open(outPath, 'w')
 #
 #--- read fits file contents
@@ -128,8 +137,7 @@ def createTable(file):
             if tbdata[tpos] > 63071999.0:
                 line = '%6d\t' % (tbdata[tpos])         
 
-#                if timeSum <= 15778800:                     #---- 6 month in seconds, if less than that, keep accumurating
-                if timeSum <= 7889400:                     #---- 3 month in seconds, if less than that, keep accumurating
+                if timeSum <= tspan:                     #---- time span in seconds, if less than that, keep accumurating
                     for k in range(0, colLen):
                             dataSum[k]  += tbdata[k]
                             dataSum2[k] += tbdata[k] * tbdata[k]
@@ -138,7 +146,7 @@ def createTable(file):
                     tot += 1.0
                 else:
 #
-#--- if the data are accumurated for 3 months, compute averate and standard deviation, and print them out
+#--- if the data are accumurated for tspan, compute averate and standard deviation, and print them out
 #
                     line = '%6d\t' % (tbdata[tpos])
                     f.write(line)
@@ -167,22 +175,28 @@ def createTable(file):
     return outName
 
 ###############################################################################################################
-### createTable2: create a table of averages over 3 month intevals from a fits file for grad data     ####
+### createTable2: create a table of averages over tspan intevals from a fits file for grad data            ####
 ###############################################################################################################
 
-def createTable2(file):
+def createTable2(file, tspan, outloc):
 
     """
-    this function read a fits file and create table of averages over 3 month intervals of each column
+    this function read a fits file and create table of averages over tspan intervals of each column
     and print them out. Since gradablk.fits uses DOM for date, we need to handle differently.
     input:  file (fits file)
+            tspan: time period which the average is taken. it must be in unit of seconds 
+            outloc: output directory
     output: ascii table of averages and standard deviations
     """
+#
+#--- convert time span into the unit of day
+#
+    tdspan = tdspan / 86400
 #
 #--- create an output file and open for writing
 #
     outName = makeOutFileName(file)
-    outPath = data_dir + outName
+    outPath = data_dir + outloc + '/' +  outName
     f = open(outPath, 'w')
 #
 #--- read fits file contents
@@ -234,8 +248,7 @@ def createTable2(file):
                 stime = tbdata[tpos] * 86400                #---- a day in second
                 line = '%6d\t' % (stime)         
 
-#                if timeSum <= 183:                     #---- 6 month in day, if less than that, keep accumurating
-                if timeSum <=  92:                     #---- 3 month in day, if less than that, keep accumurating
+                if timeSum <=  tdspan:                     #---- time sapn in day, if less than that, keep accumurating
                     for k in range(0, colLen):
                             if tbdata[k] != -99.0:
                                 dataSum[k]  += tbdata[k]
@@ -245,7 +258,7 @@ def createTable2(file):
                         tot += 1.0
                 else:
 #
-#--- if the data are accumurated for 3 months, compute averate and standard deviation, and print them out
+#--- if the data are accumurated for tspan, compute averate and standard deviation, and print them out
 #
                     stime = tbdata[tpos] * 86400 
                     line = '%6d\t' % (stime)

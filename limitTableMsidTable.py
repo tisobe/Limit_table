@@ -6,7 +6,7 @@
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Sep 06, 2012                                                                               #
+#       last update: Sep 13, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -55,17 +55,18 @@ import convertTimeFormat as tcnv
 ### extractLimit: create a limit data table os_limit_table                                                  ###
 ###############################################################################################################
 
-def extractLimit():
+def extractLimit(datloc):
 
     """
     read average and std values of each msid, compute lower and upper limits, and create limit data table
-    Input: none, but extract a list from data_dir
+    Input: datloc: the name of the data directory under data_dir
     Output: data_dir/os_limit_table
     """
 #
 #--- read data set names from data directory
 #
-    cmd = 'ls ' + data_dir + '* >' +  ztemp
+    datpass = data_dir + datloc
+    cmd = 'ls ' + datapass +  '* >' +  ztemp
     os.system(cmd)
 
     f    = open(ztemp, 'r')
@@ -90,7 +91,7 @@ def extractLimit():
 #
     for ent in data:
 
-        temp  = re.split(data_dir, ent)
+        temp  = re.split(datpass, ent)
         group = temp[1]                                     #---- group ID
 
         if ent == outfile:                                  #---os_limt_table is in the data directory, too; so ignore it
@@ -165,4 +166,5 @@ def extractLimit():
 
 if __name__ == "__main__":
 
-    extractLimit()
+    datapass = raw_input("Data Location: ")
+    extractLimit(datapass)

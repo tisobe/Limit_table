@@ -6,7 +6,7 @@
 #                                                                                                               #
 #           author: t. siboe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Sep 06, 2012                                                                           #
+#           last update: Sep 13, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -82,7 +82,7 @@ def readFileName():
 #
 #--- extract limit values for msids in each group and print them out
 #
-        outName = clt.createLimitTable(file)
+        outName = clt.createLimitTable(file, 7889400, "Plot_Data/")                   #---- 3 month avearge for plotting
 #
 #--- check whether there is a directory for the group for creating plots
 #
@@ -95,13 +95,16 @@ def readFileName():
 #
 #--- plot the limit trend
 #
-        input = data_dir + outName 
+        input = data_dir + 'Plot_Data/' +  outName 
         pml.msidLimitPlot(input, out_path)
-
+#
+#--- creating data for limit table
+#
+        outName = clt.createLimitTable(file, 15778800, "Table_Data/")                   #---- 6 month avearge for computing mta limits
 #
 #--- create a full table
 #
-    ctbl.extractLimit()
+    ctbl.extractLimit("Table_Data/")
 #
 #--- create html to show trend plots
 #
