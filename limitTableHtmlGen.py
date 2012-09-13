@@ -6,7 +6,7 @@
 #                                                                                                               #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Sep 12, 2012                                                                           #
+#           last update: Sep 13, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -85,9 +85,19 @@ def createGroupHtmlPage():
     fo.write(line)
     line = '<head>\n<title>MTA Limit Trend Page</title>\n'
     fo.write(line)
-    line = '<link rel="stylesheet" type="text/css" href="/mta/REPORTS/Template/mta_monthly.css" />'
-#    line = '<link rel="stylesheet" type="text/css" href="/data/mta4/www/REPORTS/Template/mta_monthly.css" />'
+    line = '<link rel="stylesheet" type="text/css" href="/mta/REPORTS/Template/mta_monthly.css" />\n\n'
+#    line = '<link rel="stylesheet" type="text/css" href="/data/mta4/www/REPORTS/Template/mta_monthly.css" />\n\n'
     fo.write(line)
+
+    line = '<style  type="text/css">\n'
+    fo.write(line)
+    line = 'table{text-align:center;margin-left:auto;margin-right:auto;border-style:solid;border-spacing:8px;border-width:2px;border-collapse:separate}\n'
+    fo.write(line)
+    line = 'td{text-aligne:center;padding:8px}\n'
+    fo.write(line)
+    line = '</style>\n'
+    fo.write(line)
+
     line = '</head>\n<body>\n\n'
     fo.write(line)
     line = '<h2 style="padding-bottom:20px">MTA Limit</h2>\n\n'
@@ -142,9 +152,7 @@ def createGroupHtmlPage():
     fo.write(line)
 
 
-    line ='<div><table border=2 cellpadding=8 cellspacing=8 style="text-align:center;margin-left:auto;margin-right:auto">\n'
-    fo.write(line)
-    line = '<tr>'
+    line ='<div><table border=1>\n'
     fo.write(line)
 
     ecnt = 0
@@ -159,7 +167,10 @@ def createGroupHtmlPage():
 #            out_name1 =  group + '.html'
             out_name1 =  './Plots/' + gname + '.html'
     
-            line = '<td sytle="text-aligne:center"><a href="' + out_name1 + '">' + gname + '</a></td>\n'       #--- add line to the top html page
+            if ecnt == 0:
+                fo.write('<tr>\n')
+
+            line = '<td><a href="' + out_name1 + '">' + gname + '</a></td>\n'       #--- add line to the top html page
             fo.write(line)
 #
 #--- 4 entries per raw
@@ -196,7 +207,8 @@ def createGroupHtmlPage():
 #
 #--- create a table with plots:  two column format
 #
-            line = '<table border=0 cellpadding=5 cellspacing=5 style="padding-top:30px">\n'
+##            line = '<table style="padding-top:30px;border-width:0px;border-spacing:10px">\n'
+            line = '<table>\n'
             fo2.write(line)
     
             j = 0
@@ -210,7 +222,7 @@ def createGroupHtmlPage():
                         line = '<tr><td><img src="./' + gname + '/' + pname + '"></td>\n'
                         fo2.write(line)
                         if j == tot - 1:
-                            line = '<td>&#160</td></tr>\n'
+                            line = '<td>&#160;</td></tr>\n'
                             fo2.write(line)
                     else:
                         line = '<td><img src="./' + gname + '/' +  pname + '"></td></tr>\n'
@@ -229,7 +241,7 @@ def createGroupHtmlPage():
         fo.write(line)
     else:
         for k in range(ecnt, 4):
-            line = '<td>&#160</td>'
+            line = '<td>&#160;</td>'
             fo.write(line)
 
         line = '</tr>\n</table></div>\n<br /><br />\n<hr />\n'
