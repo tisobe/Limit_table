@@ -6,7 +6,7 @@
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Sep 13, 2012                                                                               #
+#       last update: Sep 24, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -112,8 +112,16 @@ def createTable(file, tspan, outloc):
         if k == tpos:
             pass
         else:
-            temp = colNames[k].lower().replace('_avg','')
-            temp = temp.replace('_', '')
+            m = re.search('_avg', colNames[k].lower())
+            if m is not None:
+                temp = colNames[k].lower().replace('_avg','')
+            else:
+                temp = colNames[k].lower().replace('_av','')
+
+            if temp[0] == '_':
+                temp = temp[1:]
+
+#            temp = temp.replace('_', '')
             line = '\t%s\tstd' % (temp)
             f.write(line)
 
@@ -126,6 +134,7 @@ def createTable(file, tspan, outloc):
     dataSum  = [0 for x in range(colLen)]           #---- an array to save the sam of the values
     dataSum2 = [0 for x in range(colLen)]           #---- an array to save the sam of the value**2
     tbdata   = fbdata[0]
+    dataSave = []
 #    begining = tbdata[tpos]                         #---- start time of the interval
     begining = 63071999.0                           #---- start time of the interval Jan 1, 2000
 
@@ -133,43 +142,70 @@ def createTable(file, tspan, outloc):
 #
 #--- the data occasionally have "NaN", and try:  line = '%6d\t' % (tbdata[tpos]) is a good way to skip the line
 #
-        try:
-            if tbdata[tpos] > 63071999.0:
-                line = '%6d\t' % (tbdata[tpos])         
+        if tbdata[tpos] > 63071999.0:
+#            line = '%6d\t' % (tbdata[tpos])         
 
-                if timeSum <= tspan:                     #---- time span in seconds, if less than that, keep accumurating
+            if timeSum <= tspan:                     #---- time span in seconds, if less than that, keep accumurating
+                try:
                     for k in range(0, colLen):
-                            dataSum[k]  += tbdata[k]
-                            dataSum2[k] += tbdata[k] * tbdata[k]
-     
+                        dataSum[k]  += tbdata[k]
+                        dataSum2[k] += tbdata[k] * tbdata[k]
+
                     timeSum = tbdata[tpos] - begining
+                    dataSave.append(tbdata)
                     tot += 1.0
-                else:
+                except:
+                    pass
+            else:
 #
 #--- if the data are accumurated for tspan, compute averate and standard deviation, and print them out
 #
-                    line = '%6d\t' % (tbdata[tpos])
-                    f.write(line)
+                line = '%6d\t' % (tbdata[tpos])
+                f.write(line)
      
-                    for k in range(0, colLen):
-                        if k == tpos:
-                            pass
-                        else:
-                            davg = dataSum[k] / tot
-                            dstd = math.sqrt(abs(dataSum2[k] / tot - davg * davg))
+#
+#--- go through again and drop an extreme outlyer
+#
+                for k in range(0, colLen):
+                    if k == tpos:
+                        pass
+                    else:
+                        davg = dataSum[k] / tot
+                        dstd = math.sqrt(abs(dataSum2[k] / tot - davg * davg))
+                        if dstd == 0:
+                            dstd = 1
+
+                        bot  = davg - 3.0 * dstd 
+                        top  = davg + 3.0 * dstd 
+                        sum1 = 0
+                        sum2 = 0
+                        scnt = 0
+                        for lent in dataSave:
+                            try:
+                                int(lent[k])
+                                if lent[k] > bot and lent[k] < top:
+                                    sum1 += lent[k]
+                                    sum2 += lent[k] * lent[k]
+                                    scnt += 1
+                            except:
+                                pass
+                        if scnt > 0:
+                            davg = sum1 / scnt
+                            dstd = math.sqrt(abs(sum2 / scnt - davg * davg))
+
                             line = '%3.4f\t%3.4f\t' % (davg, dstd)
                             f.write(line)
-    
-                    f.write("\n")
-    
-                    tot      = 0.0
-                    timeSum  = 0
-                    dataSum  = [0 for x in range(colLen)]
-                    dataSum2 = [0 for x in range(colLen)]
-                    begining = tbdata[tpos]
-        except:
-            pass
+                        else:
+                            f.write('na\tna\t')
 
+                f.write("\n")
+
+                tot      = 0.0
+                timeSum  = 0
+                dataSum  = [0 for x in range(colLen)]
+                dataSum2 = [0 for x in range(colLen)]
+                begining = tbdata[tpos]
+                dataSave = []
 
     f.close()
     return outName
@@ -191,7 +227,7 @@ def createTable2(file, tspan, outloc):
 #
 #--- convert time span into the unit of day
 #
-    tdspan = tdspan / 86400
+    tdspan = tspan / 86400
 #
 #--- create an output file and open for writing
 #
@@ -235,7 +271,9 @@ def createTable2(file, tspan, outloc):
     tot      = 0.0
     timeSum  = 0                                    #---- time span 
     dataSum  = [0 for x in range(colLen)]           #---- an array to save the sam of the values
+    dataSum2 = [0 for x in range(colLen)]           #---- an array to save the sam of the values
     tbdata   = fbdata[0]
+    dataSave = []
 #    begining = tbdata[tpos]                        #---- start time of the interval
     begining = 366                                  #---- start time of the interval Jan 1, 2000
 
@@ -252,8 +290,10 @@ def createTable2(file, tspan, outloc):
                     for k in range(0, colLen):
                             if tbdata[k] != -99.0:
                                 dataSum[k]  += tbdata[k]
+                                dataSum2[k] += tbdata[k] * tbdata[k]
      
                     timeSum = tbdata[tpos] - begining
+                    dataSave.append(tbdata)
                     if tbdata[k] != -99.0:
                         tot += 1.0
                 else:
@@ -269,15 +309,38 @@ def createTable2(file, tspan, outloc):
                             pass
                         else:
                             davg = dataSum[k] / tot
-                            line = '%3.4f\t' % (davg)
-                            f.write(line)
+                            dstd = math.sqrt(abs(dataSum2[k] / tot - davg * davg))
+
+                            bot = davg - 3.0 * dstd
+                            top = davg + 3.0 * dstd
+                            sum1 = 0
+                            sum2 = 0
+                            scnt = 0
+                            for lent in dataSave:
+                                try:
+                                    int(lent[k])
+                                    if int(lent[k]) != -99 and lent[k] > bot and lent[k] < top:
+                                        sum1 += lent[k]
+                                        sum2 += lent[k] * lent[k]
+                                        scnt += 1
+
+                                except:
+                                    pass
+                            if scnt > 0:
+                                davg = sum1/scnt
+                                line = '%3.4f\t' % (davg)
+                                f.write(line)
+                            else:
+                                f.write('na\tna\t')
     
                     f.write("\n")
     
                     tot      = 0.0
                     timeSum  = 0
                     dataSum  = [0 for x in range(colLen)]
+                    dataSum2 = [0 for x in range(colLen)]
                     begining = tbdata[tpos]
+                    dataSave = []
         except:
             pass
 
@@ -348,7 +411,21 @@ def findTimeCol(colNames):
 
 if __name__ == "__main__":
 
-    file = raw_input('Fits File Name: ')
-    createLimitTable(file)
+    f = open('/data/mta/Script/Limit_table/house_keeping/data_list', 'r')
+    data = [line.strip() for line in f.readlines()]
+    f.close()
+
+#    file = raw_input('Fits File Name: ')
+#    createLimitTable(file, 15778800, 'Table_Data/')
+
+    for file in data:
+        print file
+        createLimitTable(file, 25920000, 'Table_Data/')
+
+#
+#    for file in data:
+#        print file
+#        createLimitTable(file, 7889400, 'Plot_Data/')
+
 
 

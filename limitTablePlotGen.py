@@ -6,7 +6,7 @@
 #                                                                                                                   #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                                   #
-#           last update: Sep 12, 2012                                                                               #
+#           last update: Sep 20, 2012                                                                               #
 #                                                                                                                   #
 #####################################################################################################################
 
@@ -135,7 +135,20 @@ def msidLimitPlot(file, out_path):
        exec("davg = avg%d" % (k))
        exec("dsig = sig%d" % (k))
 
-       plotPanel(col, time, davg, dsig, out_path)
+       clnavg = []
+       clnsig = []
+       clntime= []
+       for i in range(0, len(davg)):
+            try: 
+                tst = int(davg[i])
+                tst = int(dsig[i])
+                clnavg.append(davg[i])
+                clnsig.append(dsig[i])
+                clntime.append(time[i])
+            except:
+                pass
+
+       plotPanel(col, clntime, clnavg, clnsig, out_path)
 
 ####################################################################################################################
 #### plotPanel: plotting each panel                                                                             ####
@@ -211,6 +224,7 @@ def plotPanel(col, time, davg, dsig, out_path):
 
     step  = 4                                   #---- this makes two year moving average
     msig  = makeMovingAvg(csig, step)
+    mavg  = makeMovingAvg(cavg, step)
 
 #
 #--- set yellow/red min/max limits
@@ -221,15 +235,25 @@ def plotPanel(col, time, davg, dsig, out_path):
     lowerYellow = []
     lowerRed    = []
 
-    for k in range(step - 1, len(cavg)):
+    smoothavg    = []
+
+#    for k in range(step - 1, len(cavg)):
+    for k in range(step, len(cavg)):
 
         mtime.append(time[k])
         madd = msig[k - step]
+        mbase = mavg[k - step]
 
-        upperYellow.append(cavg[k] + 4.0 * madd)
-        upperRed.append(cavg[k]    + 5.0 * madd)
-        lowerYellow.append(cavg[k] - 4.0 * madd)
-        lowerRed.append(cavg[k]    - 5.0 * madd)
+#        upperYellow.append(cavg[k] + 4.0 * madd)
+#        upperRed.append(cavg[k]    + 5.0 * madd)
+#        lowerYellow.append(cavg[k] - 4.0 * madd)
+#        lowerRed.append(cavg[k]    - 5.0 * madd)
+        upperYellow.append(mbase + 4.0 * madd)
+        upperRed.append(mbase    + 5.0 * madd)
+        lowerYellow.append(mbase - 4.0 * madd)
+        lowerRed.append(mbase    - 5.0 * madd)
+        smoothavg.append(mbase)
+
 #
 #--- set y axis plotting limits
 #
@@ -270,7 +294,8 @@ def plotPanel(col, time, davg, dsig, out_path):
 #--- plotting
 #--- for the average, we don't use the moving average; only limit envelops use moving averages.
 #
-    plt.plot(time,  davg,        color='blue',  lw=1, marker='+', markersize=1.5)
+#    plt.plot(time,  davg,        color='blue',  lw=1, marker='+', markersize=1.5)
+    plt.plot(mtime, smoothavg,   color='blue',  lw=1, marker='+', markersize=1.5)
     plt.plot(mtime, upperYellow, color='yellow',lw=1, marker='+', markersize=1.5)
     plt.plot(mtime, lowerYellow, color='yellow',lw=1, marker='+', markersize=1.5)
     plt.plot(mtime, upperRed,    color='red',   lw=1, marker='+', markersize=1.5)
@@ -340,10 +365,15 @@ def makeMovingAvg(data, step):
 
     for k in range(step, length):
         sum = 0
+        stot = 0
         for j in range(k - step, k):
-            sum += data[j]
+            try:
+                sum += data[j]
+                stot += 1
+            except:
+                pass
 
-        mavg = sum / step
+        mavg = sum / stot
         adata.append(mavg)
 
     return adata
@@ -356,7 +386,7 @@ if __name__ == '__main__':
 
     if file == '' or file.lower() == 'n':
 
-        cmd = 'ls ' + data_dir +'/* >' + ztemp 
+        cmd = 'ls ' + data_dir +'/Table_Data/* >' + ztemp 
         os.system(cmd)
         f   = open(ztemp, 'r')
         dat = [line.strip() for line in f.readlines()]
@@ -371,6 +401,7 @@ if __name__ == '__main__':
                 data_set.append(ent)
     
         for file in data_set:
+            print file
             atemp = re.split('\/', file);
             group = atemp[len(atemp) -1]
             out_dir = plot_dir + group

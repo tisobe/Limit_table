@@ -2,11 +2,11 @@
 
 #################################################################################################################
 #                                                                                                               #
-#   createHtmlPage.py: create html pages to display trend plots under each group                                #
+#   limitTableHtmlGen.py: create html pages to display trend plots under each group                             #
 #                                                                                                               #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Sep 13, 2012                                                                           #
+#           last update: Sep 17, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -50,6 +50,7 @@ sys.path.append(bin_dir)
 #--- converTimeFormat contains MTA time conversion routines
 #
 import convertTimeFormat as tcnv
+import mta_common_functions as mcf
 
 ###############################################################################################################
 ### createGroupHtmlPage: create html pages to display trend plots under each group                          ###
@@ -83,7 +84,7 @@ def createGroupHtmlPage():
 
     line = '<!DOCTYPE html>\n<html>\n'
     fo.write(line)
-    line = '<head>\n<title>MTA Limit Trend Page</title>\n'
+    line = '<head>\n<title>MTA Trending Page</title>\n'
     fo.write(line)
     line = '<link rel="stylesheet" type="text/css" href="/mta/REPORTS/Template/mta_monthly.css" />\n\n'
 #    line = '<link rel="stylesheet" type="text/css" href="/data/mta4/www/REPORTS/Template/mta_monthly.css" />\n\n'
@@ -100,30 +101,36 @@ def createGroupHtmlPage():
 
     line = '</head>\n<body>\n\n'
     fo.write(line)
-    line = '<h2 style="padding-bottom:20px">MTA Limit</h2>\n\n'
+    line = '<h2 style="padding-bottom:20px">MTA Trending</h2>\n\n'
     fo.write(line)
 
-    line = '<p style="padding-bottom:15px">The following pages give the ranges values for each subsystem '
+    line = '<p style="padding-bottom:15px">The following pages show three trending plots of MSID values for each subsystem '
     fo.write(line)
-    line = 'and MSID as they have evolved over the course of the mission.'
+    line = 'as they have evolved over the course of the mission.'
     fo.write(line)
-    line = 'limit table for monitoring and trending purposes. \n'
+
+    line = 'The left plot is MTA Trends/Derivatives Plot. For more details, please go to <a href="http://cxc.cfa.harvard.edu/mta/DAILY/mta_deriv/">MTA Trends/Derivatives</a> page. '
     fo.write(line)
-    line = '<p style="padding-bottom:15px">The limits for each MSID are created as following:</p>\n'
+    line = 'The center plot is MTA Envelope Trending. For more detials, please go to <a href="http://asc.harvard.edu/mta_days/mta_envelope_trend/">MTA Trending: Envelope Trending</a> page. '
+    fo.write(line)
+
+    line = 'The right plot is history of upper and lower limits of each msid for monitoring and trending purposes. These limits are, however, not used prior to XXX of 2012. \n'
+    fo.write(line)
+    line = 'The limits of each MSID are created as following:</p>\n'
     fo.write(line)
     line = '<ul>\n'
     fo.write(line)
-    line = '<li>The average and the standard deviation of each MSID are computed for 3 month periods for the entire period.</li>\n'
+    line = '<li>The average and the standard deviation of each MSID are computed for 6 month periods for the entire period.</li>\n'
     fo.write(line)
     line = '<li>These averages and standard deviations are further smoothed by taking past 2 year moving averages. \n'
     fo.write(line)
-    line = '(For example, the value given for January 2002 is the average of the 3 month averages from January 2001 to January 2003.)</li>\n'
+    line = '(For example, the value given for January 2003 is the average of the 6 month averages from January 2001 to January 2003.)</li>\n'
     fo.write(line)
     line = '<li><em style="color:yellow">Yellow lines</em> are set at the center value (the average) plus or minus 4 standard deviation aways.</li>\n'
     fo.write(line)
-    line = '<li><em style="color:red">Red lines</em> are set t the center value (the average) plus or minus 5 standard deviation aways.</li>\n'
+    line = '<li><em style="color:red">Red lines</em> are set at the center value (the average) plus or minus 5 standard deviation aways.</li>\n'
     fo.write(line)
-    line = '<li>Most recent 6 month values of each MSID are taken as MTA Limit.</li>\n'
+    line = '<li>Most recent 6 month values of each MSID are taken as MTA Limits.</li>\n'
     line = '</ul><br /><br />'
     fo.write(line)
 
@@ -139,16 +146,31 @@ def createGroupHtmlPage():
 #
 #--- check each group
 #
-    line = '<h2 style="padding-bottom:20px">MTA Limit Trend</h2>\n\n'
+    line = '<h2 style="padding-bottom:20px">MTA Trending Plots</h2>\n\n'
     fo.write(line)
 
-    line = '<p style="padding-bottom:40px">The following table lists trend plots of msids for each group. To see the plots, '
+    line = '<p>The following table lists three trend plots of each msid in the named groups. To see the plots, '
     fo.write(line)
-    line = 'please click the group name. It will open the trend plot page of the group.  '
+    line = 'please click the group name. It will open the trend plot page of the group.</p> '
     fo.write(line)
-    line = 'In each plot, the blue line indicates the (moving) average of the value of the msid, the yellow lines indicate lower and '
+
+    line = '<p>The top panel of the trending plot shows thedata and its trend and the bottom panel shows the deviation. '
     fo.write(line)
-    line = 'upper yellow limits, and red lines indicate lower and upper red limits.</p>\n\n'
+    line = 'If you click the plot, you can enlarge the plot.</p> ' 
+    fo.write(line)
+
+    line = '<p>A green line of the envelope plot is a moving average of the data and blue lines are estimated outer limits of the data range. '
+    fo.write(line)
+    line = 'If the data points are  colored in magenda, the data points are in yellow limits, and if they are in red, they are in red limits.</p>'
+    fo.write(line)
+
+    line = '<p style="padding-bottom:40px">In each limit  plot, the blue line indicates the (moving) average of the value of the msid, the yellow lines indicate lower and '
+    fo.write(line)
+    line = 'upper yellow limits, and red lines indicate lower and upper red limits. '
+    fo.write(line)
+    line = 'Note that if the plotting range of the limit plot is smaller than 1, it plots with fractinal value and shows the base '
+    fo.write(line)
+    line = 'value to add to convert back the original range.\n\n'
     fo.write(line)
 
 
@@ -165,7 +187,8 @@ def createGroupHtmlPage():
 #--- create indivisual html pages
 #
 #            out_name1 =  group + '.html'
-            out_name1 =  './Plots/' + gname + '.html'
+            out_name1 =  './Plots/' + gname + '.html'           #----   THIS IS THE LIVE ONE !!!!!!
+###            out_name1 =  './Plots_test/' + gname + '.html'
     
             if ecnt == 0:
                 fo.write('<tr>\n')
@@ -187,7 +210,29 @@ def createGroupHtmlPage():
             out_name2 = html_dir + out_name1
             fo2 = open(out_name2, 'w')
     
-            line = '<!DOCTYPE html>\n<html>\n<head>\n<title>' + gname + '</title>\n</head>\n<body>\n\n'
+            line = '<!DOCTYPE html>\n<html>\n<head>\n<title>' + gname + '</title>\n'
+            line = line + '<script type="text/javascript">\n'
+            line = line + 'function WindowOpener(imgname) {\n'
+            line = line + '    msgWindow = open("","displayname","toolbar=no,directories=no,menubar=no,location=no,scrollbars=no,status=no,width=720,height=550,resize=no");\n'
+            line = line + '    msgWindow.document.clear();\n'
+            line = line + '    msgWindow.document.write("<html><title>Trend plot:   "+imgname+"</title>");\n'
+            line = line + '    msgWindow.document.write("<body bgcolor=\'black\'>");\n'
+            line = line + '    msgWindow.document.write("<img src=\'http://cxc.cfa.harvard.edu/mta/DAILY/mta_deriv/"+imgname+"\' border=0 width=720 height=550><P></body></html>")\n'
+            line = line + '    msgWindow.document.close();\n'
+            line = line + '    msgWindow.focus();\n'
+            line = line + '}\n'
+            line = line + 'function WindowOpener2(imgname) {\n'
+            line = line + '    msgWindow = open("","displayname","toolbar=no,directories=no,menubar=no,location=no,scrollbars=no,status=no,width=720,height=570,resize=no");\n'
+            line = line + '    msgWindow.document.clear();\n'
+            line = line + '    msgWindow.document.write("<html><title>Envelope plot:   "+imgname+"</title>");\n'
+            line = line + '    msgWindow.document.write("<body bgcolor=\'black\'>");\n'
+            line = line + '    msgWindow.document.write("<img src=\'http://cxc.cfa.harvard.edu/mta_days/mta_envelope_trend/Full_range/"+imgname+"\' border=0 width=720 height=550><P></body></html>")\n'
+            line = line + '    msgWindow.document.close();\n'
+            line = line + '    msgWindow.focus();\n'
+            line = line + '}\n'
+            line = line + '</script>\n'
+
+            line = line + '</head>\n<body>\n\n'
             fo2.write(line)
             line = '<h2> Group: ' + gname  + '</h2>\n\n'
             fo2.write(line)
@@ -205,7 +250,7 @@ def createGroupHtmlPage():
             os.system(cmd)
     
 #
-#--- create a table with plots:  two column format
+#--- create a table with plots:  three column format
 #
 ##            line = '<table style="padding-top:30px;border-width:0px;border-spacing:10px">\n'
             line = '<table>\n'
@@ -214,20 +259,69 @@ def createGroupHtmlPage():
             j = 0
             tot = len(plist)
             for ent in plist:
+
                 m2 = re.search('png', ent)
                 if m2 is not None:
                     temp  = re.split(group, ent)
                     pname = temp[1]
-                    if j % 2 == 0:
-                        line = '<tr><td><img src="./' + gname + '/' + pname + '"></td>\n'
-                        fo2.write(line)
-                        if j == tot - 1:
-                            line = '<td>&#160;</td></tr>\n'
-                            fo2.write(line)
+#
+#--- trending plot 
+#
+                    oname = pname.replace('/', '')
+                    oname = oname.replace('.png', '_avgA.gif')
+                    try:
+                        n = int(oname[0])
+                        oname = '_' + oname
+                    except:
+                        pass
+
+                    ptitle = oname.replace('_avgA.gif', '')
+                    ptitle = ptitle.upper()
+                    line = '<tr><th style="font-size:140%;text-align:left" colspan=3>' + ptitle + '</th></tr>\n'
+                    fo2.write(line)
+                    line = '<tr><th>Trending Plot</th><th>Envelope Plot</th><th>Limit Plot</tr>\n'
+                    fo2.write(line)
+#
+#--- envelope plot
+#
+                    ename = pname.replace('/', '')
+                    ename = ename.replace('.png', '_plot.gif')
+                    if ename[0] == '_':
+                        ename = ename[1:]
+
+                    pdir  = gname.upper()
+                    try:
+                        n = int(pdir[len(pdir)-1])
+                        pdir = pdir[:-1]
+                    except:
+                        pass
+                            
+                    m1 = re.search('2A', pdir);
+                    m2 = re.search('2B', pdir);
+                    if m1 is not None or m2 is not None:
+                        pdir = 'SPCELECA'
+
+                    jline = '<a href="javascript:WindowOpener(\'' + oname + '\')">'
+
+                    line = '<tr><td style="text-align:center">'
+
+                    ftest = mcf.chkFile('/data/mta4/www/DAILY/mta_deriv/',oname)
+
+                    if ftest > 0:
+                        line = line + jline + '<img src="http://cxc.cfa.harvard.edu/mta/DAILY/mta_deriv/' + oname + '" style="width:450px" ></a><br />\n' 
+                        line = line + jline + '<strong style="padding-right:10px">Enlarge Trend Plot</strong></a>\n</td>\n'
                     else:
-                        line = '<td><img src="./' + gname + '/' +  pname + '"></td></tr>\n'
-                        fo2.write(line)
-                    j += 1
+                        line = line + '<td style="background-color:black"><img src="http://cxc.cfa.harvard.edu/mta_days/mta_limit_table/no_data.png" style="width:500px"></td>\n'
+
+                    ftest = mcf.chkFile('/data/mta/www/mta_envelope_trend/Full_range/', pdir)
+                    if ftest > 0:
+                        line = line + '<td><img src="http://cxc.cfa.harvard.edu/mta_days/mta_envelope_trend/Full_range/' + pdir + '/Plots/'  + ename + '" style="width:500px"></td>\n'
+                    else:
+                        line = line + '<td style="background-color:black"><img src="http://cxc.cfa.harvard.edu/mta_days/mta_limit_table/no_data.png" style="width:500px"></td>\n'
+
+                    line = line + '<td><img src="./' + gname + '/' + pname + '" style="width:500px"></td></tr>\n'
+                    
+                    fo2.write(line)
      
             line = '</table>\n'
             fo2.write(line)

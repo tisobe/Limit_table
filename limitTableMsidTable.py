@@ -6,7 +6,7 @@
 #                                                                                                               #
 #       author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                               #
-#       last update: Sep 13, 2012                                                                               #
+#       last update: Sep 21, 2012                                                                               #
 #                                                                                                               #
 #################################################################################################################
 
@@ -65,15 +65,15 @@ def extractLimit(datloc):
 #
 #--- read data set names from data directory
 #
-    datpass = data_dir + datloc
-    cmd = 'ls ' + datapass +  '* >' +  ztemp
+    datpass = data_dir + datloc + '/'
+    cmd = 'ls ' + datpass +  '* >' +  ztemp
     os.system(cmd)
 
     f    = open(ztemp, 'r')
     data = [line.strip() for line in f.readlines()]
     f.close()
     cmd = 'rm ' + ztemp
-    os.system(cmd)
+#    os.system(cmd)
 #
 #--- print header
 #
@@ -91,6 +91,7 @@ def extractLimit(datloc):
 #
     for ent in data:
 
+        print ent
         temp  = re.split(datpass, ent)
         group = temp[1]                                     #---- group ID
 
@@ -130,9 +131,25 @@ def extractLimit(datloc):
                         k2 = int(k/2)
                         if k % 2 == 0:
                             k2 -= 1
-                            exec("sig%d.append(float(atemp[%d]))" % (k2, k))
+#
+#--- the data is occasionally na; if that is the case, use the previous value. if it is the first one, set it to "0"
+#
+                            try:
+                                exec("sig%d.append(float(atemp[%d]))" % (k2, k))
+                            except:
+                                try:
+                                    exec("sig%d.append(sig%d[len(sig%d) -1])" % (k2, k2, k2))
+                                except:
+                                    exec("sig%d.append(0)" % (k2))
                         else:
-                            exec("avg%d.append(float(atemp[%d]))" % (k2, k))
+                            try:
+                                exec("avg%d.append(float(atemp[%d]))" % (k2, k))
+                            except:
+                                try:
+                                    exec("avg%d.append(avg%d[len(avg%d) -1])" % (k2, k2, k2))
+                                except:
+                                    exec("avg%d.append(0)" % (k2))
+                                    
 
                     total += 1
 
