@@ -6,7 +6,7 @@
 #                                                                                                               #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                           #
 #                                                                                                               #
-#           last update: Sep 17, 2012                                                                           #
+#           last update: Sep 25, 2012                                                                           #
 #                                                                                                               #
 #################################################################################################################
 
@@ -120,9 +120,9 @@ def createGroupHtmlPage():
     fo.write(line)
     line = '<ul>\n'
     fo.write(line)
-    line = '<li>The average and the standard deviation of each MSID are computed for 6 month periods for the entire period.</li>\n'
+    line = '<li>The average and standard deviation of each MSID are computed for 6 month periods for the entire period.</li>\n'
     fo.write(line)
-    line = '<li>These averages and standard deviations are further smoothed by taking past 2 year moving averages. \n'
+    line = '<li>The standard deviations (but not average) are further smoothed by taking past 2 year moving averages. \n'
     fo.write(line)
     line = '(For example, the value given for January 2003 is the average of the 6 month averages from January 2001 to January 2003.)</li>\n'
     fo.write(line)

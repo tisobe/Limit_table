@@ -6,7 +6,7 @@
 #                                                                                                                   #
 #           author: t. isobe (tisobe@cfa.harvard.edu)                                                               #
 #                                                                                                                   #
-#           last update: Sep 20, 2012                                                                               #
+#           last update: Sep 25, 2012                                                                               #
 #                                                                                                                   #
 #####################################################################################################################
 
@@ -242,7 +242,8 @@ def plotPanel(col, time, davg, dsig, out_path):
 
         mtime.append(time[k])
         madd = msig[k - step]
-        mbase = mavg[k - step]
+#        mbase = mavg[k - step]
+        mbase = davg[k]
 
 #        upperYellow.append(cavg[k] + 4.0 * madd)
 #        upperRed.append(cavg[k]    + 5.0 * madd)
