@@ -415,17 +415,5 @@ if __name__ == "__main__":
     data = [line.strip() for line in f.readlines()]
     f.close()
 
-#    file = raw_input('Fits File Name: ')
-#    createLimitTable(file, 15778800, 'Table_Data/')
-
-    for file in data:
-        print file
-        createLimitTable(file, 25920000, 'Table_Data/')
-
-#
-#    for file in data:
-#        print file
-#        createLimitTable(file, 7889400, 'Plot_Data/')
-
-
-
+    file = raw_input('Fits File Name: ')
+    createLimitTable(file, 15778800, 'Data/')

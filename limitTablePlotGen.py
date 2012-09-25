@@ -387,7 +387,7 @@ if __name__ == '__main__':
 
     if file == '' or file.lower() == 'n':
 
-        cmd = 'ls ' + data_dir +'/Table_Data/* >' + ztemp 
+        cmd = 'ls ' + data_dir +'/Data/* >' + ztemp 
         os.system(cmd)
         f   = open(ztemp, 'r')
         dat = [line.strip() for line in f.readlines()]
