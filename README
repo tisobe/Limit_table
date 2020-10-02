@@ -3,9 +3,9 @@
 MTA Trending / Limit Table 
 ###########################
 
-This directory contains a set of python scripts which estimates yellow and red limits of all msids from the past data.
-The limits are derived from  average and standard deviations of the last 6 monhts data. 
-The scripts also give the trend plots of these limits, along trend plots and envelope plots,  from the beginning of 
+This directory contains a set of the python scripts which estimates yellow and red limits of all msids from the past data.
+The limits are derived from the average and standard deviations of the last 6 months data. 
+The scripts also give the trend plots of these limits, along trend plots and envelope plots,from the beginning of 
 the Chandra mission. 
 
 Data are taken from:
